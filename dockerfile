@@ -1,20 +1,19 @@
-# Use official Python runtime as base image
-FROM python:3.9-slim
+# start by pulling the python image
+FROM python:3.8-alpine
 
-# Set working directory
+# copy the requirements file into the image
+COPY ./requirements.txt /app/requirements.txt
+
+# switch working directory
 WORKDIR /app
 
-# Copy requirements file
-COPY requirements.txt .
+# install the dependencies and packages in the requirements file
+RUN pip install -r requirements.txt
 
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# copy every content from the local file to the image
+COPY . /app
 
-# Copy application code
-COPY . .
+# configure the container to run in an executed manner
+ENTRYPOINT [ "python" ]
 
-# Expose port
-EXPOSE 5000
-
-# Run the application
-CMD ["python", "app.py"]
+CMD ["app.py" ]
